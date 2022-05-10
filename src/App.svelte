@@ -1,0 +1,141 @@
+<script lang="ts">
+  import { formatDateInTimezone } from "./date";
+  import "./app.css";
+  const timeZones = [
+    ["🇨🇳", "Asia/Shanghai"],
+    ["🇯🇵", "Asia/Tokyo"],
+    ["PDX", "America/Los_Angeles"],
+    ["SLC", "America/Boise"],
+    ["MSP", "America/Chicago"],
+    ["NY", "America/New_York"],
+    ["🇪🇺", "Europe/Copenhagen"],
+    ["🇦🇷", "America/Buenos_Aires"],
+  ];
+  const clocks = [
+    "⏱",
+    "🕥",
+    "🕙",
+    "🕣",
+    "🕠",
+    "🕝",
+    "🕢",
+    "🕟",
+    "🕜",
+    "🕤",
+    "🕡",
+    "🕞",
+    "🕘",
+    "🕒",
+    "🕗",
+    "🕔",
+    "🕑",
+    "🕖",
+    "🕓",
+    "🕛",
+    "🕖",
+    "⏲",
+    "🕕",
+    "⏰",
+    "⏱",
+    "🕰",
+  ];
+  const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  let offset = 0;
+  const getNextNow = () => {
+    const nextNow = new Date();
+    nextNow.setHours(nextNow.getHours() + offset);
+    return nextNow.valueOf();
+  };
+  let now = getNextNow();
+  let clockIndex = 0;
+  setInterval(() => {
+    now = getNextNow();
+    clockIndex = clockIndex === clocks.length ? 0 : clockIndex + 1;
+  }, 1000);
+  const handleChange = () => {
+    now = getNextNow();
+  };
+</script>
+
+<main>
+  <h1>
+    {clocks[clockIndex]}
+  </h1>
+  <div class="tzs">
+    {#each timeZones as tz}
+      <div title={tz[1]} class="tz">
+        <span>
+          {#if tz[1] === currentTimeZone}
+            <span class="pointer">➡️ </span>
+          {/if}
+          {tz[0]}:
+        </span>
+        <span>
+          {formatDateInTimezone(now, tz[1])}
+        </span>
+      </div>
+    {/each}
+    <div class="tz">
+      <input
+        type="range"
+        min="-24"
+        max="24"
+        bind:value={offset}
+        class="slider"
+        on:input={handleChange}
+      />
+      <input
+        type="number"
+        min="-24"
+        max="24"
+        bind:value={offset}
+        on:change={handleChange}
+      />
+      hrs
+    </div>
+  </div>
+</main>
+
+<style>
+  :root {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+  main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    flex-wrap: wrap;
+  }
+  h1 {
+    flex: 0 0 100%;
+    text-align: center;
+  }
+  .tzs {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 300px;
+  }
+  .tz {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 300px;
+    position: relative;
+  }
+  input {
+    width: 100%;
+  }
+  .pointer {
+    position: absolute;
+    left: -20px;
+  }
+  main {
+    background-color: lavenderblush;
+  }
+</style>
