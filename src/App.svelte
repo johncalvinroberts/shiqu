@@ -50,7 +50,7 @@
   let clockIndex = 0;
   setInterval(() => {
     now = getNextNow();
-    clockIndex = clockIndex === clocks.length ? 0 : clockIndex + 1;
+    clockIndex = clockIndex === clocks.length - 1 ? 0 : clockIndex + 1;
   }, 1000);
   const handleChange = () => {
     now = getNextNow();
