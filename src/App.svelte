@@ -40,21 +40,26 @@
     "🕰",
   ];
   const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  let offset = 0;
+  let offsetHrs = 0;
+  let offsetMins = 0;
   const getNextNow = () => {
     const nextNow = new Date();
-    nextNow.setHours(nextNow.getHours() + offset);
+    nextNow.setHours(nextNow.getHours() + offsetHrs);
+    nextNow.setMinutes(nextNow.getMinutes() + offsetMins);
     return nextNow.valueOf();
   };
+
   let now = getNextNow();
   let clockIndex = 0;
+
+  const handleChange = () => {
+    now = getNextNow();
+  };
+
   setInterval(() => {
     now = getNextNow();
     clockIndex = clockIndex === clocks.length - 1 ? 0 : clockIndex + 1;
   }, 1000);
-  const handleChange = () => {
-    now = getNextNow();
-  };
 </script>
 
 <main>
@@ -80,7 +85,7 @@
         type="range"
         min="-24"
         max="24"
-        bind:value={offset}
+        bind:value={offsetHrs}
         class="slider"
         on:input={handleChange}
       />
@@ -88,10 +93,28 @@
         type="number"
         min="-24"
         max="24"
-        bind:value={offset}
+        bind:value={offsetHrs}
         on:change={handleChange}
       />
       hrs
+    </div>
+    <div class="tz">
+      <input
+        type="range"
+        min="0"
+        max="60"
+        bind:value={offsetMins}
+        class="slider"
+        on:input={handleChange}
+      />
+      <input
+        type="number"
+        min="0"
+        max="60"
+        bind:value={offsetMins}
+        on:change={handleChange}
+      />
+      mins
     </div>
   </div>
 </main>
@@ -127,9 +150,6 @@
     justify-content: space-between;
     max-width: 300px;
     position: relative;
-  }
-  input {
-    width: 100%;
   }
   .pointer {
     position: absolute;
