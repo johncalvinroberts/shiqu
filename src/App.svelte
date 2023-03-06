@@ -8,6 +8,7 @@
     ["SLC", "America/Boise"],
     ["MSP", "America/Chicago"],
     ["NY", "America/New_York"],
+    ["🍁", "America/St_Johns"],
     ["🇪🇺", "Europe/Copenhagen"],
     ["🇦🇷", "America/Buenos_Aires"],
   ];
